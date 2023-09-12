@@ -30,8 +30,14 @@ const Square = ({ children, isSelected, updateBoard, index }) => {
 }
 
 export function App() {
-  const [board, setBoard] = useState(new Array(9).fill(null))
-  const [turn, setTurn] = useState(TURNS.X)
+  const [board, setBoard] = useState(() => {
+    const boardStorage = window.localStorage.getItem('board')
+    return boardStorage ? JSON.parse(boardStorage) : Array(9).fill(null)
+  })
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ? JSON.parse(turnFromStorage) : TURNS.X
+  })
   const [winner, setWinner] = useState(null) // sea false hay empate y cuando no sea ni false ni null hay ganador
 
   const checkWinner = (newBoard) => {
@@ -52,20 +58,24 @@ export function App() {
     const newBoard = structuredClone(board)
     newBoard[index] = turn
     setBoard(newBoard)
+    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
+    setTurn(newTurn)
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('turn', JSON.stringify(newTurn))
     const newWinner = checkWinner(newBoard)
     if (newWinner) {
       setWinner(newWinner)
     } else if (checkEndGame(newBoard)) {
       setWinner(false)
     }
-    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
-    setTurn(newTurn)
   }
 
   const resetGame = () => {
-    setBoard(new Array(9).fill(null))
+    setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
   }
 
   return (
