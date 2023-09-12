@@ -62,6 +62,12 @@ export function App() {
     setTurn(newTurn)
   }
 
+  const resetGame = () => {
+    setBoard(new Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
+  }
+
   return (
     <>
       <main className='board'>
@@ -85,26 +91,25 @@ export function App() {
             {TURNS.O}
           </Square>
         </section>
+
+        {
+
+          winner !== null && (
+            <section className='winner'>
+              <div className='text'>
+                <h2>{winner ? 'Ganó: ' : 'Empate'}</h2>
+                <header className='win'>
+                  {winner && <Square>{winner}</Square>}
+                </header>
+                <footer>
+                  <button onClick={resetGame}>Empezar de nuevo</button>
+                </footer>
+              </div>
+            </section>
+          )
+
+        }
       </main>
-
-      {
-
-        winner !== null && (
-          <section className='winner'>
-            <div className='text'>
-              <h2>{winner ? 'Ganó: ' : 'Empate'}</h2>
-              <header className='win'>
-                {winner && <Square>{winner}</Square>}
-              </header>
-              <footer>
-                <button>Empezar de nuevo</button>
-              </footer>
-            </div>
-          </section>
-        )
-
-      }
-
     </>
   )
 }
