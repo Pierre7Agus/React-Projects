@@ -13,7 +13,7 @@ export function App() {
   })
   const [turn, setTurn] = useState(() => {
     const turnFromStorage = window.localStorage.getItem('turn')
-    return turnFromStorage ? JSON.parse(turnFromStorage) : TURNS.X
+    return turnFromStorage ?? TURNS.X
   })
   const [winner, setWinner] = useState(null) // sea false hay empate y cuando no sea ni false ni null hay ganador
 
@@ -25,7 +25,7 @@ export function App() {
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
     window.localStorage.setItem('board', JSON.stringify(newBoard))
-    window.localStorage.setItem('turn', JSON.stringify(newTurn))
+    window.localStorage.setItem('turn', newTurn)
     const newWinner = checkWinner(newBoard)
     if (newWinner) {
       setWinner(newWinner)
